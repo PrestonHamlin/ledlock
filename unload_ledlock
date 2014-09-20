@@ -1,0 +1,13 @@
+#!/bin/sh
+# load script modified from LDD3 script for short driver
+
+module="ledlock"
+device="ledlock"
+
+# invoke rmmod with all arguments we got
+/sbin/rmmod $module $* || exit 1
+
+# Remove stale nodes
+rm -f /dev/ledlock0 
+
+

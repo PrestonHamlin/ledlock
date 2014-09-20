@@ -1,0 +1,28 @@
+#!/bin/sh
+# load script modified from LDD3 script for short driver
+
+module="ledlock"
+device="ledlock"
+mode="664"
+
+# Group: since distributions do it differently, look for wheel or use staff
+if grep '^staff:' /etc/group > /dev/null; then
+    group="staff"
+else
+    group="wheel"
+fi
+
+
+# invoke insmod with all arguments we got
+# and use a pathname, as newer modutils don't look in . by default
+/sbin/insmod ./$module.ko $* || exit 1
+
+#major=`cat /proc/devices | awk "\\$2==\"$module\" {print \\$1}"`
+
+# use an arbitrary major number, which may need to be changed
+rm -f /dev/ledlock0
+mknod /dev/ledlock0 c 399 0
+chgrp $group /dev/ledlock0
+chmod $mode  /dev/ledlock0
+
+
